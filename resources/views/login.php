@@ -9,8 +9,8 @@
 </head>
 
 <body>
-    <div id="vue-app" class="card" style="width:30%;left:35%;margin-top:210px">
-        <div class="card-body">
+    <div id="vue-app" class="card" style="width:30%;left:35%;margin-top:100px;border:1px solid">
+        <div class="card-body shadow-none p-3 mb-5 bg-light rounded">
             <h5 class="card-title">
                 <center>
                     Login

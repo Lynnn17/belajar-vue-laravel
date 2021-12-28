@@ -27,7 +27,7 @@
        <table class="table table-hover text-center">
            <a href="#input"type="button"
         class="btn btn-success text-light mt-1 mb-1"
-        @click="deleteData(barang)">Tambah Data</a>
+        @click="getAdd()">Tambah Data</a>
   <thead>
     <tr>
       <th scope="col">NO</th>
@@ -44,12 +44,7 @@
       <td>{{ barang.stok }}</td>
      <td>Rp.{{ barang.harga }}</td>
     <td>
-        <!-- <button
-        type="button"
-        class="btn btn-primary text-light"
-        @click="getEdit(barang)"
-        >
-    </button> -->
+
     <a href="#input"
      type="button"
         class="btn btn-primary text-light"
@@ -65,7 +60,7 @@
 
   </tbody>
 </table>
-            <div id="input">
+            <div id="input" v-show="formData">
                 <hr>
                 <h4 v-show="editBarang">Edit Data</h4>
                 <h4 v-show="!editBarang">Input Data</h4>
@@ -87,7 +82,8 @@
                 </div>
                 <button class="btn btn-primary" @click="addData" v-show="!editBarang">Simpan</button>
                 <button class="btn btn-primary" @click="editData" v-show="editBarang">Simpan</button>
-                <!-- </form> -->
+                <button class="btn btn-primary" @click="dataForm">Batal</button>
+
             </div>
         </div>
 
@@ -107,16 +103,17 @@
            id: '',
            editBarang: false,
            deleteBarang : false,
+           formData : false,
            nama_barang : '',
            harga_barang : '',
            stok_barang : '',
            user: false
         },
-    //     created: function () {
-    //     this.dataBarang();
-    // },
-       methods: {
 
+       methods: {
+           dataForm(){
+               this.formData= false;
+           },
         dataBarang ()  {
             axios.get('api/barang')
                 .then(res => {
@@ -129,6 +126,7 @@
                 })
         },
         editData(){
+             this.formData = false;
             axios
                 .put("api/barang", {
                     nama_barang: this.namaBarangAdd,
@@ -139,11 +137,13 @@
                 .then((res) => {
                     // handle success
                     this.dataBarang();
+                    alert("Edit data Berhasil");
                     this.namaBarangAdd = '';
                     this.hargaAdd = '';
                     this.stokAdd = '';
                     this.id = '';
                     this.editBarang = false;
+
                 })
                 .catch((err) => {
                     // handle error
@@ -152,6 +152,7 @@
         },
         getEdit(data) {
             this.editBarang = true;
+            this.formData = true;
             this.id = data.id;
             this.namaBarangAdd = data.nama_barang;
             this.hargaAdd = data.harga;
@@ -166,6 +167,7 @@
                 )
                 .then((res) => {
                     // handle success
+                    alert("Hapus data Berhasil");
                     this.dataBarang();
                 })
                 .catch((err) => {
@@ -173,7 +175,18 @@
                     console.log(err);
                 });
         },
+        getAdd(){
+             this.editBarang = false;
+             this.formData = true;
+             this.namaBarangAdd = "";
+             this.hargaAdd ="";
+             this.stokAdd = "";
+             this.id = "";
+        },
+
         addData(data){
+             this.formData = false;
+            console.log(this.editBarang)
             axios
                 .post("api/barang", {
                     nama_barang: this.namaBarangAdd,
@@ -183,12 +196,7 @@
                 .then((res) => {
                     // handle success
                     this.dataBarang();
-                    // alert("Tambah data Berhasil");
-                    // Swal.fire(
-                    // 'Good job!',
-                    // 'You clicked the button!',
-                    // 'success'
-                    // )
+                    alert("Tambah data Berhasil");
                     this.namaBarangAdd = '';
                     this.hargaAdd = '';
                     this.stokAdd = '';
